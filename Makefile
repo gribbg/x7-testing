@@ -1,7 +1,7 @@
 default: help
 
 # Based on https://gist.github.com/lumengxi/0ae4645124cd4066f676
-.PHONY: clean-pyc clean-build docs clean git-clean
+.PHONY: clean clean-pyc clean-build clean-os clean-test docs git-clean
 
 define BROWSER_PYSCRIPT
 import os, webbrowser, sys
@@ -45,7 +45,7 @@ init: venv
 	$(PYTHON) -m pip -q install -r requirements.txt
 	$(PYTHON) -m pip -q install -r dev-requirements.txt
 
-clean: clean-build clean-pyc clean-test
+clean: clean-build clean-pyc clean-test clean-os
 
 clean-build:
 	rm -fr build/
@@ -53,6 +53,9 @@ clean-build:
 	rm -fr .eggs/
 	$(FIND_SKIP) -name '*.egg-info' -exec rm -fr {} +
 	$(FIND_SKIP) -name '*.egg' -exec rm -f {} +
+
+clean-os:
+	$(FIND_SKIP) -name '.DS_Store' -exec rm -fr {} +
 
 clean-pyc:
 	$(FIND_SKIP) -name '*.pyc' -exec rm -f {} +
