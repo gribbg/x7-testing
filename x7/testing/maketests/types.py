@@ -14,7 +14,7 @@ Module = types.ModuleType
 
 # Functional types
 ClassSrcInfo = NamedTuple('ClassSrcInfo', cls=Type, start=int, last=int)
-ParsedModule = NamedTuple('ParsedModule', classes=DictClasses, functions=DictCallable, module=str, required_imports=set)
+ParsedModule = NamedTuple('ParsedModule', classes=DictClasses, functions=DictCallable, module=Module, required_imports=set)
 
 
 # Errors

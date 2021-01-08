@@ -2,8 +2,8 @@ import inspect
 import sys
 from typing import Type
 
-from gg.devtools.maketests.types import DictClasses, DictCallable, ParsedModule, is_namedtuple, MaketestsError
-from gg.devtools.maketests.mod_support import Module, is_local
+from x7.testing.maketests.types import DictClasses, DictCallable, ParsedModule, is_namedtuple, MaketestsError
+from x7.testing.maketests.mod_support import Module, is_local
 
 
 def expand_subclasses(prefix: str, klass: Type, classes: DictClasses, debug=False) -> None:
@@ -76,10 +76,10 @@ def parse_module(mod: Module, verbose=False, debug=False) -> ParsedModule:
     assert not (included - include or excluded - exclude)
     errors = []
     if included != include:
-        missing = include-included
+        missing = include - included
         errors.append('INCLUDE: did not find %s' % ','.join(missing))
     if excluded != exclude:
-        missing = exclude-excluded
+        missing = exclude - excluded
         errors.append('EXCLUDE: did not find %s' % ','.join(missing))
     if errors:
         raise MaketestsError('    '.join(errors))

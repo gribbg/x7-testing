@@ -140,7 +140,7 @@ class Pickler(object):
         Other types are output as pickled data stored as string.
     """
     # TODO-refine the pickle helper concept.  Images should be added with a helper
-    
+
     MAX_LINE_LEN = 300
     PRIMITIVES = (str, Number)  # Types that require no recursion and can be output via repr
     # , BBox, Point, Vector, ControlPoint, PenBrush, Transform)
@@ -180,7 +180,7 @@ class Pickler(object):
 
     def bytes_out(self, data: bytes):
         out = b85encode(zlib.compress(data)).decode('utf-8')
-        return '\n        '.join(repr(out[idx: idx+self.MAX_LINE_LEN]) for idx in range(0, len(out), self.MAX_LINE_LEN))
+        return '\n        '.join(repr(out[idx: idx + self.MAX_LINE_LEN]) for idx in range(0, len(out), self.MAX_LINE_LEN))
 
     @staticmethod
     def bytes_in(data: str):
@@ -211,7 +211,7 @@ class Pickler(object):
     def do_pickle_dict(self, data, prefix):
         out = []
         for k, v in sorted(data.items()):
-            out.append('%s%r: %s,' % (prefix, k, self.do_pickle(v, prefix+self.prefix)))
+            out.append('%s%r: %s,' % (prefix, k, self.do_pickle(v, prefix + self.prefix)))
         return '{\n%s\n}' % '\n'.join(out)
 
     def do_pickle_extensions(self, data, prefix):
@@ -235,13 +235,13 @@ class Pickler(object):
 
         if isinstance(data, Elem):
             dc = DumpContext(use_vars=False)
-            dc.depth = len(prefix)//4
+            dc.depth = len(prefix) // 4
             data.dump(dc)
             return dc.output(just_lines=True).lstrip()
         elif isinstance(data, list) and all(isinstance(d, Elem) for d in data):
             dc = DumpContext(use_vars=False)
             dc.append('[')
-            dc.depth = len(prefix)//4 + 1
+            dc.depth = len(prefix) // 4 + 1
             for e in data:
                 e.dump(dc)
                 dc.add_comma()
@@ -255,7 +255,7 @@ class Pickler(object):
         if self.is_simple(data):
             return repr(data)
         elif isinstance(data, dict) and self.is_simple(list(data.keys())):
-            return self.do_pickle_dict(data, prefix+self.prefix)
+            return self.do_pickle_dict(data, prefix + self.prefix)
         elif extended := self.do_pickle_extensions(data, prefix):
             return extended
         else:
@@ -367,5 +367,5 @@ def warn_class(klass: type, message):
     modname = klass.__module__
     module = sys.modules[modname]
     filename = module.__file__
-    lineno = inspect.findsource(klass)[1]+1
+    lineno = inspect.findsource(klass)[1] + 1
     print('%s:%d: Warning: %s: %s' % (filename, lineno, klass.__qualname__, message))

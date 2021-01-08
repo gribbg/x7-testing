@@ -66,7 +66,7 @@ clean-test:
 	rm -fr htmlcov/
 
 lint:
-	$(PYTHON) -m flake8 --extend-ignore=E741 $(PROJECT_DIR) tests
+	$(PYTHON) -m flake8 $(PROJECT_DIR) tests
 
 test:
 	$(PYTHON) -m unittest discover -s tests -t .

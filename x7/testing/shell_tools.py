@@ -4,12 +4,10 @@
 def maketests(module=None, really=False, force=False):
     """Generate/update tests for python module"""
     import sys
-    import importlib
-    maketests_mod = importlib.import_module('gg.devtools.maketests.maketests')
-    # from gg.devtools.maketests import maketests
+    import x7.testing.maketests.maketests as maketests_mod
     if not module:
         print('Help: maketests(module-name, really=False, force=False)')
-        print('Example: maketests("gg.sample.needs_test", True)')
+        print('Example: maketests("x7.sample.needs_test", True)')
     else:
         saved = sys.argv[:]
         try:
@@ -44,4 +42,4 @@ def do_import(other_globals: dict):
     for n in _all_tools():
         other_globals[n] = globals()[n]
     other_globals['__all__'] = _all_tools()
-    print("Tools imported.  Commands: %s" % ', '.join(t+'()' for t in _all_tools()))
+    print("Tools imported.  Commands: %s" % ', '.join(t + '()' for t in _all_tools()))

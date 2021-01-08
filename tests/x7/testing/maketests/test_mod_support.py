@@ -1,14 +1,11 @@
-# Originally auto-generated on 2019-09-11-14:10:09 -0400 Eastern Daylight Time
-# By 'C:/Users/glenn/PycharmProjects/devtools/maketests/maketests.py -v -f maketests.mod_support'
-
 import os
 import unittest
 from typing import cast
 from unittest.mock import patch
 
-from gg.devtools.maketests.types import Module
-from gg.devtools.testing.annotations import tests
-from gg.devtools.maketests import mod_support
+from x7.testing.maketests.types import Module
+from x7.lib.annotations import tests
+from x7.testing.maketests import mod_support
 
 
 class MockModule(object):
@@ -90,7 +87,7 @@ class TestModModSupport(unittest.TestCase):
         self.assertEqual(('head.part', 'tail'), mod_support.mod_split('head.part.tail'))
         self.assertEqual(('', 'tail_only'), mod_support.mod_split('tail_only'))
         self.assertEqual(('', 'os'), mod_support.mod_split(cm(os)))
-        self.assertEqual(('gg.devtools.maketests', 'mod_support'), mod_support.mod_split(cm(mod_support)))
+        self.assertEqual(('x7.testing.maketests', 'mod_support'), mod_support.mod_split(cm(mod_support)))
 
     @tests(mod_support.mod_tail_join)
     def test_mod_tail_join(self):

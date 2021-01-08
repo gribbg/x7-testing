@@ -5,4 +5,4 @@ Simple file to validate that maketests is working.  Call maketests via:
 
 
 def needs_a_test(a, b):
-    return a+b
+    return a + b

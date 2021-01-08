@@ -1,25 +1,22 @@
-# Originally auto-generated on 2019-09-19-15:59:07 -0400 Eastern Daylight Time
-# By 'C:/Users/glenn/PycharmProjects/devtools/gg/devtools/maketests/__main__.py -v -f gg.devtools.maketests.gen_code'
-
 import importlib
 import inspect
 from unittest import TestCase
-from gg.devtools.maketests import gen_code, outmap
-from gg.devtools.maketests.types import ParsedModule
-from gg.devtools.testing import Capture
-from gg.devtools.testing.annotations import tests
+from x7.testing.maketests import gen_code, outmap
+from x7.testing.maketests.types import ParsedModule
+from x7.testing.support import Capture
+from x7.lib.annotations import tests
 
 EXPECTED_FUNC_PLAIN = """
     @tests(test_gen_code.func_under_test)
     def test_func_under_test(self):
         # func_under_test()
-        pass  # TODO-impl tests.gg.devtools.maketests.test_gen_code.func_under_test test
+        pass  # TODO-impl tests.x7.testing.maketests.test_gen_code.func_under_test test
 """.strip('\n')
 EXPECTED_FUNC_IN_CLASS = """
     @tests(test_gen_code.TestModGenCode.func_under_test)
     def test_func_under_test(self):
         # func_under_test()
-        pass  # TODO-impl tests.gg.devtools.maketests.test_gen_code.TestModGenCode.func_under_test test
+        pass  # TODO-impl tests.x7.testing.maketests.test_gen_code.TestModGenCode.func_under_test test
 """.strip('\n')
 EXPECTED_GEN_MOD_CLASS = '''
 @tests(bar)
@@ -29,7 +26,7 @@ class TestModBar(TestCase):
     @tests(test_gen_code.member)
     def test_member(self):
         # member()
-        pass  # TODO-impl tests.gg.devtools.maketests.test_gen_code.member test
+        pass  # TODO-impl tests.x7.testing.maketests.test_gen_code.member test
 '''.strip('\n')
 EXPECTED_CLASS = """
 *   @tests(test_gen_code.Klass)
@@ -55,18 +52,18 @@ Z
 a       @tests(test_gen_code.Klass.a_func)
 a       def test_a_func(self):
 a           # a_func(self)
-a           pass  # TODO-impl tests.gg.devtools.maketests.test_gen_code.Klass.a_func test
+a           pass  # TODO-impl tests.x7.testing.maketests.test_gen_code.Klass.a_func test
 A
 b       @tests(test_gen_code.Klass.b_func)
 b       def test_b_func(self):
 b           # b_func(self, x, y)
-b           pass  # TODO-impl tests.gg.devtools.maketests.test_gen_code.Klass.b_func test
+b           pass  # TODO-impl tests.x7.testing.maketests.test_gen_code.Klass.b_func test
 """.lstrip('\n')
 EXPECTED_PARSE_EMPTY = '''
 # HEADER
 
 from unittest import TestCase
-from gg.devtools.testing.annotations import tests
+from x7.lib.annotations import tests
 from test_inputs import parse_empty
 
 
@@ -95,7 +92,7 @@ Items to add:
 # HEADER
 
 from unittest import TestCase
-from gg.devtools.testing.annotations import tests
+from x7.lib.annotations import tests
 from test_inputs import parse_empty
 
 
@@ -196,7 +193,7 @@ class Klazz(BaseKlass):
 
 @tests(gen_code)
 class TestModGenCode(TestCase):
-    """Tests for stand-alone functions in gg.devtools.maketests.gen_code module"""
+    """Tests for stand-alone functions in x7.testing.maketests.gen_code module"""
     @tests(gen_code.gen_func)
     def test_gen_func_plain(self):
         added = dict()
@@ -205,8 +202,8 @@ class TestModGenCode(TestCase):
         self.assertEqual(EXPECTED_FUNC_PLAIN, result)
         self.assertEqual(
             {
-                'tests.gg.devtools.maketests.test_gen_code.func_under_test':
-                'module:tests.gg.devtools.maketests.test_gen_code',
+                'tests.x7.testing.maketests.test_gen_code.func_under_test':
+                'module:tests.x7.testing.maketests.test_gen_code',
             },
             added)
         self.assertEqual({}, tested)
@@ -219,8 +216,8 @@ class TestModGenCode(TestCase):
         self.assertEqual(EXPECTED_FUNC_IN_CLASS, result)
         self.assertEqual(
             {
-                'tests.gg.devtools.maketests.test_gen_code.TestModGenCode.func_under_test':
-                'tests.gg.devtools.maketests.test_gen_code.TestModGenCode',
+                'tests.x7.testing.maketests.test_gen_code.TestModGenCode.func_under_test':
+                'tests.x7.testing.maketests.test_gen_code.TestModGenCode',
             },
             added)
         self.assertEqual({}, tested)
@@ -228,7 +225,7 @@ class TestModGenCode(TestCase):
     @tests(gen_code.gen_func)
     def test_gen_func_already_tested(self):
         added = dict()
-        tested = {'tests.gg.devtools.maketests.test_gen_code.func_under_test': 'any-str'}
+        tested = {'tests.x7.testing.maketests.test_gen_code.func_under_test': 'any-str'}
         tested_orig = dict(**tested)
         result = gen_code.gen_func('func_under_test', func_under_test, None, added, tested)
         self.assertIsNone(result)
@@ -240,9 +237,9 @@ class TestModGenCode(TestCase):
         with Capture() as capture:
             self.test_gen_class(True)
         lines = [
-            '? gen_class(tests.gg.devtools.maketests.test_gen_code.Klass)-what is IGNORE_ME:not a class or function',
-            'found class-local class: tests.gg.devtools.maketests.test_gen_code.Klass.IgnoreThisToo, should already be handled',
-            'skipping apparently inherited function: ignore_this in tests.gg.devtools.maketests.test_gen_code.Klass',
+            '? gen_class(tests.x7.testing.maketests.test_gen_code.Klass)-what is IGNORE_ME:not a class or function',
+            'found class-local class: tests.x7.testing.maketests.test_gen_code.Klass.IgnoreThisToo, should already be handled',
+            'skipping apparently inherited function: ignore_this in tests.x7.testing.maketests.test_gen_code.Klass',
         ]
         self.assertEqual('\n'.join(lines), capture.stdout())
         self.assertEqual('', capture.stderr())
@@ -255,9 +252,9 @@ class TestModGenCode(TestCase):
         self.assertEqual(True, isnew)
         self.assertEqual(expected_class('*abA'), text)
         self.assertEqual({
-                'tests.gg.devtools.maketests.test_gen_code.Klass': 'class',
-                'tests.gg.devtools.maketests.test_gen_code.Klass.a_func': 'tests.gg.devtools.maketests.test_gen_code.Klass',
-                'tests.gg.devtools.maketests.test_gen_code.Klass.b_func': 'tests.gg.devtools.maketests.test_gen_code.Klass',
+                'tests.x7.testing.maketests.test_gen_code.Klass': 'class',
+                'tests.x7.testing.maketests.test_gen_code.Klass.a_func': 'tests.x7.testing.maketests.test_gen_code.Klass',
+                'tests.x7.testing.maketests.test_gen_code.Klass.b_func': 'tests.x7.testing.maketests.test_gen_code.Klass',
             },
             added)
         self.assertEqual({}, tested)
@@ -265,30 +262,30 @@ class TestModGenCode(TestCase):
     @tests(gen_code.gen_class)
     def test_gen_class_exists(self, verbose=False):
         added = {}
-        tested = {'tests.gg.devtools.maketests.test_gen_code.Klass': 'class'}
+        tested = {'tests.x7.testing.maketests.test_gen_code.Klass': 'class'}
         text, isnew = gen_code.gen_class('Klass', Klass, added, tested, verbose)
         self.assertEqual(False, isnew)
         self.assertEqual(expected_class('abA'), text)
         self.assertEqual({
-                'tests.gg.devtools.maketests.test_gen_code.Klass.a_func': 'tests.gg.devtools.maketests.test_gen_code.Klass',
-                'tests.gg.devtools.maketests.test_gen_code.Klass.b_func': 'tests.gg.devtools.maketests.test_gen_code.Klass',
+                'tests.x7.testing.maketests.test_gen_code.Klass.a_func': 'tests.x7.testing.maketests.test_gen_code.Klass',
+                'tests.x7.testing.maketests.test_gen_code.Klass.b_func': 'tests.x7.testing.maketests.test_gen_code.Klass',
             },
             added)
-        self.assertEqual({'tests.gg.devtools.maketests.test_gen_code.Klass': 'class'}, tested)
+        self.assertEqual({'tests.x7.testing.maketests.test_gen_code.Klass': 'class'}, tested)
 
     @tests(gen_code.gen_class)
     def test_gen_class_and_func_exist(self, verbose=False):
         added = {}
         tested_orig = {
-            'tests.gg.devtools.maketests.test_gen_code.Klass': 'class',
-            'tests.gg.devtools.maketests.test_gen_code.Klass.a_func': 'tests.gg.devtools.maketests.test_gen_code.Klass',
+            'tests.x7.testing.maketests.test_gen_code.Klass': 'class',
+            'tests.x7.testing.maketests.test_gen_code.Klass.a_func': 'tests.x7.testing.maketests.test_gen_code.Klass',
         }
         tested = dict(**tested_orig)
         text, isnew = gen_code.gen_class('Klass', Klass, added, tested, verbose)
         self.assertEqual(False, isnew)
         self.assertEqual(expected_class('b'), text)
         self.assertEqual({
-                'tests.gg.devtools.maketests.test_gen_code.Klass.b_func': 'tests.gg.devtools.maketests.test_gen_code.Klass',
+                'tests.x7.testing.maketests.test_gen_code.Klass.b_func': 'tests.x7.testing.maketests.test_gen_code.Klass',
             },
             added)
         self.assertEqual(tested_orig, tested)
@@ -297,9 +294,9 @@ class TestModGenCode(TestCase):
     def test_gen_class_all_exist(self, verbose=False):
         added = {}
         tested_orig = {
-            'tests.gg.devtools.maketests.test_gen_code.Klass': 'class',
-            'tests.gg.devtools.maketests.test_gen_code.Klass.a_func': 'tests.gg.devtools.maketests.test_gen_code.Klass',
-            'tests.gg.devtools.maketests.test_gen_code.Klass.b_func': 'tests.gg.devtools.maketests.test_gen_code.Klass',
+            'tests.x7.testing.maketests.test_gen_code.Klass': 'class',
+            'tests.x7.testing.maketests.test_gen_code.Klass.a_func': 'tests.x7.testing.maketests.test_gen_code.Klass',
+            'tests.x7.testing.maketests.test_gen_code.Klass.b_func': 'tests.x7.testing.maketests.test_gen_code.Klass',
         }
         tested = dict(**tested_orig)
         text, isnew = gen_code.gen_class('Klass', Klass, added, tested, verbose)
@@ -317,7 +314,7 @@ class TestModGenCode(TestCase):
         text, isnew = gen_code.gen_class('Klazz', Klazz, added, tested, verbose)
         self.assertEqual(True, isnew)
         self.assertEqual(expected_class('*p').replace('Klass', 'Klazz'), text)
-        self.assertEqual({'tests.gg.devtools.maketests.test_gen_code.Klazz': 'class'}, added)
+        self.assertEqual({'tests.x7.testing.maketests.test_gen_code.Klazz': 'class'}, added)
         self.assertEqual({}, tested)
 
     def test_force_coverage(self):
@@ -342,7 +339,7 @@ class TestModGenCode(TestCase):
 
 @tests(gen_code)        # TODO-should be able to say @tests(gen_code.gen_module) and apply to all tests
 class TestFuncGenModule(TestCase):
-    """Tests for stand-alone functions in gg.devtools.maketests.gen_code module"""
+    """Tests for stand-alone functions in x7.testing.maketests.gen_code module"""
 
     def assertCodeEqual(self, raw_expected, raw_actual):
         """Compare code without comments"""

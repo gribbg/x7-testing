@@ -1,6 +1,6 @@
 import os
 from typing import Tuple, Any, Union
-from gg.devtools.maketests.types import Module
+from x7.testing.maketests.types import Module
 
 
 def mod_split(mod: Union[Module, str]):

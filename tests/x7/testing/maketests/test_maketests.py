@@ -1,20 +1,17 @@
-# Originally auto-generated on 2019-09-24-17:15:51 -0400 Eastern Daylight Time
-# By 'C:/Users/glenn/PycharmProjects/devtools/gg/devtools/maketests/__main__.py -v -f gg.devtools.maketests.maketests'
-
 from unittest import TestCase
 
-from gg.devtools.testing import Argv, Capture
-from gg.devtools.testing.annotations import tests
-from gg.devtools.maketests import maketests
+from x7.testing.support import Argv, Capture
+from x7.lib.annotations import tests
+from x7.testing.maketests import maketests
 
 
 @tests(maketests)
 class TestModMaketests(TestCase):
-    """Tests for stand-alone functions in gg.devtools.maketests.maketests module"""
+    """Tests for stand-alone functions in x7.testing.maketests.maketests module"""
 
     def test_do_module(self):
         # do_module(inmod: module, outmod: str, filename: str, header: str, verbose: bool, dryrun: bool, doprint: bool, debug=False)
-        pass  # TODO-impl gg.devtools.maketests.maketests.do_module test
+        pass  # TODO-impl x7.testing.maketests.maketests.do_module test
 
     @tests(maketests.main)
     def test_main_usage(self):

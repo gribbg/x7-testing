@@ -1,12 +1,9 @@
-# Originally auto-generated on 2019-09-19-14:45:13 -0400 Eastern Daylight Time
-# By 'C:/Users/glenn/PycharmProjects/devtools/gg/devtools/maketests/__main__.py -v -f gg.devtools.testing.support'
-
 import sys
 from io import StringIO
 from unittest import TestCase
-from gg.devtools.testing.annotations import tests
-from gg.devtools.testing.support import Capture, Argv, Pickler, PicklerExtensionImage, PicklerExtension
-from gg.devtools.testing import support
+from x7.lib.annotations import tests
+from x7.testing.support import Capture, Argv, Pickler, PicklerExtensionImage, PicklerExtension
+from x7.testing import support
 # noinspection PyPackageRequirements
 from PIL import Image
 
@@ -115,8 +112,8 @@ class TestPickler(TestCase):
     @tests(support.Pickler.is_simple)
     @tests(support.Pickler.pickled)
     def test_do_pickle(self):
-        def pu(data, expected=None, exts=(), startswith=None):
-            pickler = Pickler(exts)
+        def pu(data, expected=None, extensions=(), startswith=None):
+            pickler = Pickler(extensions)
             pickled = pickler.do_pickle(data, '  ')
             # print(pickled)
             if expected:
@@ -133,7 +130,7 @@ class TestPickler(TestCase):
         pu(SimpleObject(17))
         # noinspection SpellCheckingInspection
         pu(dict(a=SimpleObject(21), c=3, d=[1, 7]), """{
-      'a': pickled('SimpleObject', 'c${lsnd-p+0X=FZsl_G5dg<wUDXC>8`T04;dLWU^ymT-fUtC&HkY7|XrH3atGq)fo)jugKHMwNU<SCksQ);L5Fjh?Q7A;QF0|1Zv9%='),
+      'a': pickled('SimpleObject', 'c${lsnQG4f0X?!Msl_G5dKKn+AVy|hI+%_xE-fg?FDjYR!xNmDTac6LpOlrFTry?y6wSsdwNrW+E2emh7ANTe0EE~Yn*'),
       'c': 3,
       'd': [1, 7],
 }""")
@@ -143,17 +140,17 @@ class TestPickler(TestCase):
         pu(Image.new('RGBA', (2, 2), 'yellow'), startswith="pickled('Image',")
 
         # With extension, outputs a call to image
-        pu(Image.new('1', (1, 1), 'black'), exts=PicklerExtensionImage, startswith="image('1', (1, 1),")
-        pu(Image.new('RGBA', (2, 2), 'yellow'), exts=PicklerExtensionImage, startswith="image('RGBA', (2, 2), ")
+        pu(Image.new('1', (1, 1), 'black'), extensions=PicklerExtensionImage, startswith="image('1', (1, 1),")
+        pu(Image.new('RGBA', (2, 2), 'yellow'), extensions=PicklerExtensionImage, startswith="image('RGBA', (2, 2), ")
 
         # With extension, outputs a call to PrimitivePoint
         pu(PrimitivePoint(1, 2), startswith="pickled('PrimitivePoint',")
-        pu(PrimitivePoint(1, 2), 'PrimitivePoint(1, 2)', exts=PicklerExtensionPP)
+        pu(PrimitivePoint(1, 2), 'PrimitivePoint(1, 2)', extensions=PicklerExtensionPP)
 
     @tests(support.Pickler.load)
     def test_load(self):
         # load(self, in_file)
-        pass  # TODO-impl gg.devtools.testing.support.Pickler.load test
+        pass  # TODO-impl x7.testing.support.Pickler.load test
 
 
 @tests(support.RecordedData)
@@ -166,37 +163,37 @@ class TestRecordedDataModule(TestCase):
     @tests(support.RecordedDataModule.__init__)
     def test___init__(self):
         # __init__(self, mod: str)
-        pass  # TODO-impl gg.devtools.testing.support.RecordedDataModule.__init__ test
+        pass  # TODO-impl x7.testing.support.RecordedDataModule.__init__ test
 
     @tests(support.RecordedDataModule._key)
     def test__key(self):
         # _key(cls, func, case)
-        pass  # TODO-impl gg.devtools.testing.support.RecordedDataModule._key test
+        pass  # TODO-impl x7.testing.support.RecordedDataModule._key test
 
     @tests(support.RecordedDataModule.file_name)
     def test_file_name(self):
         # file_name(self)
-        pass  # TODO-impl gg.devtools.testing.support.RecordedDataModule.file_name test
+        pass  # TODO-impl x7.testing.support.RecordedDataModule.file_name test
 
     @tests(support.RecordedDataModule.get)
     def test_get(self):
         # get(self, cls, func: str, case: str)
-        pass  # TODO-impl gg.devtools.testing.support.RecordedDataModule.get test
+        pass  # TODO-impl x7.testing.support.RecordedDataModule.get test
 
     @tests(support.RecordedDataModule.load)
     def test_load(self):
         # load(self)
-        pass  # TODO-impl gg.devtools.testing.support.RecordedDataModule.load test
+        pass  # TODO-impl x7.testing.support.RecordedDataModule.load test
 
     @tests(support.RecordedDataModule.put)
     def test_put(self):
         # put(self, cls, func: str, case: str, new_data)
-        pass  # TODO-impl gg.devtools.testing.support.RecordedDataModule.put test
+        pass  # TODO-impl x7.testing.support.RecordedDataModule.put test
 
     @tests(support.RecordedDataModule.save)
     def test_save(self):
         # save(self)
-        pass  # TODO-impl gg.devtools.testing.support.RecordedDataModule.save test
+        pass  # TODO-impl x7.testing.support.RecordedDataModule.save test
 
 
 @tests(support.RecorderError)
@@ -206,7 +203,7 @@ class TestRecorderError(TestCase):
 
 @tests(support)
 class Test0support(TestCase):
-    """Tests for stand-alone functions in gg.devtools.testing.support module"""
+    """Tests for stand-alone functions in x7.testing.support module"""
 
     @tests(support.unused)
     def test_unused(self):
@@ -218,4 +215,4 @@ class Test0support(TestCase):
     @tests(support.warn_class)
     def test_warn_class(self):
         # warn_class(klass: type, message)
-        pass  # TODO-impl gg.devtools.testing.support.warn_class test
+        pass  # TODO-impl x7.testing.support.warn_class test

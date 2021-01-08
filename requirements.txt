@@ -1,1 +1,2 @@
+pillow
 x7-lib

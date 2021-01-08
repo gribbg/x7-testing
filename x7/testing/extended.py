@@ -12,7 +12,7 @@ from unittest import util
 from unittest.case import TestCase
 from unittest.util import safe_repr
 
-from gg.devtools.testing.support import RecorderError, RecordedData, warn_class, PicklerExtension, Pickler
+from x7.testing.support import RecorderError, RecordedData, warn_class, PicklerExtension, Pickler
 
 Matcher = Callable[[Any, Any], Any]
 ExplainReturn = Tuple[bool, Optional[str]]

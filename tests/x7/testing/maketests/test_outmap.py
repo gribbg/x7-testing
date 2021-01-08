@@ -1,12 +1,10 @@
-# Originally auto-generated on 2019-09-16-19:14:19 -0400 Eastern Daylight Time
-# By 'C:/Users/glenn/PycharmProjects/devtools/gg/devtools/maketests/__main__.py -v -f gg.devtools.maketests.outmap'
-
 from unittest import TestCase
-from gg.devtools.testing.annotations import tests
-from gg.devtools.maketests.outmap import OutputMapElem, OutputMap
+from x7.lib.annotations import tests
+from x7.testing.maketests.outmap import OutputMapElem, OutputMap
 from test_inputs import parse_basic
-from gg.devtools.testing import Capture, annotations
-from tests.gg.devtools.maketests.test_mod_support import cm
+from x7.testing.support import Capture
+from x7.lib import annotations
+from tests.x7.testing.maketests.test_mod_support import cm
 
 
 def use_stuff_to_eliminate_pylint_warnings_and_provide_test_coverage():
@@ -47,7 +45,7 @@ class TestOutputMap(TestCase):
         out = capture.stdout()
         lines = [
             'Class: ClassGotImported -> tests',
-            '  Class: TestModExample -> tests gg.devtools.testing.annotations',
+            '  Class: TestModExample -> tests x7.lib.annotations',
             '  Class: TestModExample2 -> tests test_inputs.parse_basic.TestModExample',
         ]
         for l in lines:
@@ -86,8 +84,8 @@ class TestOutputMap(TestCase):
             self.fail('Did not find THIS_LINE_IS in ' + parse_basic.__file__)
         self.assertEqual(
             {
-                'gg.devtools.testing.annotations': 'test_inputs.parse_basic.TestModExample',
-                'gg.devtools.testing.annotations.tests': 'test_tests',
+                'x7.lib.annotations': 'test_inputs.parse_basic.TestModExample',
+                'x7.lib.annotations.tests': 'test_tests',
                 'test_inputs.example_imported': 'test_example_imported',
                 'test_inputs.parse_basic.TestModExample': 'test_inputs.parse_basic.TestModExample2',
              },
@@ -106,12 +104,12 @@ class TestOutputMap(TestCase):
         # print('::'.join('%s(%s)' % (type(e).__qualname__, e) for e in outmap.testmap.keys()))
         self.assertEqual(
             {
-                'gg.devtools.testing.annotations': 'TestModExample',
+                'x7.lib.annotations': 'TestModExample',
                 'test_inputs.parse_basic.TestModExample': 'TestModExample2'
             },
             outmap.testmap)
 
 
-@tests('gg.devtools.maketests.outmap')
+@tests('x7.testing.maketests.outmap')
 class Test0outmap(TestCase):
-    """Tests for stand-alone functions in gg.devtools.maketests.outmap module"""
+    """Tests for stand-alone functions in x7.testing.maketests.outmap module"""

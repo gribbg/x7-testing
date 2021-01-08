@@ -14,9 +14,9 @@ import importlib
 import textwrap
 from typing import List  # , Set, List, Union
 
-from gg.devtools.maketests.gen_code import gen_module
-from gg.devtools.maketests.mod_support import locate_output, is_package, Module
-from gg.devtools.maketests.types import OptParseValues
+from x7.testing.maketests.gen_code import gen_module
+from x7.testing.maketests.mod_support import locate_output, is_package, Module
+from x7.testing.maketests.types import OptParseValues
 
 
 def do_module(inmod: Module, outmod: str, filename: str, header: str,

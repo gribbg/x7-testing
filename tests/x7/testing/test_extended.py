@@ -1,11 +1,8 @@
-# Originally auto-generated on 2020-12-16-18:25:48 -0500 EST
-# By '--verbose --verbose gg.devtools.testing.extended'
-
 from unittest import TestCase
-from gg.devtools.testing.annotations import tests
-from gg.devtools.testing import extended
-from gg.devtools.testing.extended import ExtendedMatcherImage
-from gg.devtools.testing.support import PicklerExtensionImage
+from x7.lib.annotations import tests
+from x7.testing import extended
+from x7.testing.extended import ExtendedMatcherImage
+from x7.testing.support import PicklerExtensionImage
 
 
 @tests(extended.ExtendedMatcher)
@@ -13,17 +10,17 @@ class TestExtendedMatcher(TestCase):
     @tests(extended.ExtendedMatcher.__init__)
     def test___init__(self):
         # __init__(self, test_case: 'TestCaseExtended', type: Type)
-        pass  # TODO-impl gg.devtools.testing.extended.ExtendedMatcher.__init__ test
+        pass  # TODO-impl x7.testing.extended.ExtendedMatcher.__init__ test
 
     @tests(extended.ExtendedMatcher.almost_equal)
     def test_almost_equal(self):
         # almost_equal(self, first, second, places=None, delta=None) -> Union[bool, str]
-        pass  # TODO-impl gg.devtools.testing.extended.ExtendedMatcher.almost_equal test
+        pass  # TODO-impl x7.testing.extended.ExtendedMatcher.almost_equal test
 
     @tests(extended.ExtendedMatcher.explain_mismatch)
     def test_explain_mismatch(self):
         # explain_mismatch(self, new_data, old_data) -> Tuple[bool, Union[str, NoneType]]
-        pass  # TODO-impl gg.devtools.testing.extended.ExtendedMatcher.explain_mismatch test
+        pass  # TODO-impl x7.testing.extended.ExtendedMatcher.explain_mismatch test
 
 
 @tests(extended.ExtendedMatcherImage)
@@ -31,17 +28,17 @@ class TestExtendedMatcherImage(TestCase):
     @tests(extended.ExtendedMatcherImage.__init__)
     def test___init__(self):
         # __init__(self, test_case: 'TestCaseExtended')
-        pass  # TODO-impl gg.devtools.testing.extended.ExtendedMatcherImage.__init__ test
+        pass  # TODO-impl x7.testing.extended.ExtendedMatcherImage.__init__ test
 
     @tests(extended.ExtendedMatcherImage.explain_mismatch)
     def test_explain_mismatch(self):
         # explain_mismatch(self, new_data, old_data) -> Tuple[bool, Union[str, NoneType]]
-        pass  # TODO-impl gg.devtools.testing.extended.ExtendedMatcherImage.explain_mismatch test
+        pass  # TODO-impl x7.testing.extended.ExtendedMatcherImage.explain_mismatch test
 
     @tests(extended.ExtendedMatcherImage.show_images)
     def test_show_images(self):
         # show_images(self, new_data, old_data)
-        pass  # TODO-impl gg.devtools.testing.extended.ExtendedMatcherImage.show_images test
+        pass  # TODO-impl x7.testing.extended.ExtendedMatcherImage.show_images test
 
 
 @tests(extended.TestCaseExtended)
@@ -75,27 +72,27 @@ class TestTestCaseExtended(extended.TestCaseExtended):
     @tests(extended.TestCaseExtended.assertAlmostEqual)
     def test_assertAlmostEqual(self):
         # assertAlmostEqual(self, first: Any, second: Any, places: int = None, msg: Any = None, delta: float = None) -> None
-        pass  # TODO-impl gg.devtools.testing.extended.TestCaseExtended.assertAlmostEqual test
+        pass  # TODO-impl x7.testing.extended.TestCaseExtended.assertAlmostEqual test
 
     @tests(extended.TestCaseExtended.assertAlmostMatch)
     def test_assertAlmostMatch(self):
         # assertAlmostMatch(self, new_data, case='0', func=None, cls=None)
-        pass  # TODO-impl gg.devtools.testing.extended.TestCaseExtended.assertAlmostMatch test
+        pass  # TODO-impl x7.testing.extended.TestCaseExtended.assertAlmostMatch test
 
     @tests(extended.TestCaseExtended.assertMatch)
     def test_assertMatch(self):
         # assertMatch(self, new_data, case='0', func=None, cls=None)
-        pass  # TODO-impl gg.devtools.testing.extended.TestCaseExtended.assertMatch test
+        pass  # TODO-impl x7.testing.extended.TestCaseExtended.assertMatch test
 
     @tests(extended.TestCaseExtended.match)
     def test_match(self):
         # match(self, new_data, case='0', func=None, cls=None, matcher: Union[Callable[[Any, Any], Any], NoneType] = None)
-        pass  # TODO-impl gg.devtools.testing.extended.TestCaseExtended.match test
+        pass  # TODO-impl x7.testing.extended.TestCaseExtended.match test
 
     @tests(extended.TestCaseExtended.matchExact)
     def test_matchExact(self):
         # matchExact(self, new_data, old_data) -> Union[bool, str]
-        pass  # TODO-impl gg.devtools.testing.extended.TestCaseExtended.matchExact test
+        pass  # TODO-impl x7.testing.extended.TestCaseExtended.matchExact test
 
     def test_something(self):
         for tag in 'abc':
@@ -110,4 +107,4 @@ class TestTestCaseExtended(extended.TestCaseExtended):
 
 @tests(extended)
 class TestModExtended(TestCase):
-    """Tests for stand-alone functions in gg.devtools.testing.extended module"""
+    """Tests for stand-alone functions in x7.testing.extended module"""

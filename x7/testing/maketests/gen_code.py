@@ -3,15 +3,15 @@ import inspect
 import sys
 from typing import Iterable, Tuple, Union
 
-from gg.devtools.maketests.inspect_more import item_name
-from gg.devtools.maketests.mod_support import gen_test_class_name, is_local, mod_tail_join, mod_split
-from gg.devtools.maketests.outmap import OutputMap
-from gg.devtools.maketests.parse import parse_module
-from gg.devtools.maketests.types import OptClass, DictAdded, DictTested, OptStr, Module, ParsedModule, MaketestsError
+from x7.lib.inspect_more import item_name
+from x7.testing.maketests.mod_support import gen_test_class_name, is_local, mod_tail_join, mod_split
+from x7.testing.maketests.outmap import OutputMap
+from x7.testing.maketests.parse import parse_module
+from x7.testing.maketests.types import OptClass, DictAdded, DictTested, OptStr, Module, ParsedModule, MaketestsError
 
 FILE_HEADER = '''
 from unittest import TestCase
-from gg.devtools.testing.annotations import tests
+from x7.lib.annotations import tests
 %s
 '''.strip('\n')
 CLASS_HEADER_old = ['''
@@ -135,6 +135,16 @@ def gen_module(inmod: Module, outmod: str, header: str,
 
     in_mod_name = inmod.__name__
     src = parse_module(inmod, verbose, debug)
+    test_inputs_found = False
+    try:
+        import tests.test_inputs
+        assert tests.test_inputs        # Flag as used to flake8
+        test_inputs_found = True
+    except ModuleNotFoundError:
+        pass
+    if not test_inputs_found:
+        print('gen_module: tests.test_inputs module not found.  Make sure you have created this package')
+        raise MaketestsError('tests.test_inputs module not found: make sure you have created this package')
     try:
         output_module = importlib.import_module(outmod)
     except ModuleNotFoundError as err:
@@ -189,19 +199,19 @@ def gen_module(inmod: Module, outmod: str, header: str,
         # Handle classes in <in_mod_name> module
         for member_name, c in src.classes.items():
             name = item_name(c)
-            ctext, class_is_new = gen_class(member_name, c, dstmap.added, dstmap.tested)
+            class_text, class_is_new = gen_class(member_name, c, dstmap.added, dstmap.tested)
             if class_is_new:
-                to_insert = ['>ins_class:%s<\n' % name, ctext, '\n\n\n', '>out_class<\n']
+                to_insert = ['>ins_class:%s<\n' % name, class_text, '\n\n\n', '>out_class<\n']
                 dstmap.lines[clsinsert].extend(to_insert)
             else:
                 if name in dstmap.testmap:
                     tester = dstmap.testmap[name]
                     insert = dstmap.classes[tester].last - 1
-                    if ctext:
-                        to_insert = ['\n', '>ins_member<\n', ctext, '\n', '>out_member<\n']
+                    if class_text:
+                        to_insert = ['\n', '>ins_member<\n', class_text, '\n', '>out_member<\n']
                         dstmap.lines[insert].extend(to_insert)
                 else:       # pragma: no cover
-                    err = "Can't find where to put %s code [%d lines], use TEST_IGNORE?" % (name, ctext.count('\n'))
+                    err = "Can't find where to put %s code [%d lines], use TEST_IGNORE?" % (name, class_text.count('\n'))
                     raise MaketestsError(err)
 
         # Handle plain functions in <in_mod_name> module

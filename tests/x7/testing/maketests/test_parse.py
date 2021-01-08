@@ -1,12 +1,9 @@
-# Originally auto-generated on 2019-09-16-17:40:59 -0400 Eastern Daylight Time
-# By 'C:/Users/glenn/PycharmProjects/devtools/gg/devtools/maketests/__main__.py -v -f gg.devtools.maketests.parse'
-
 from unittest import TestCase
 from typing import NamedTuple
-from gg.devtools.testing.annotations import tests
-from gg.devtools.maketests import parse, types
-from gg.devtools.testing import Capture
-from tests.gg.devtools.maketests.test_mod_support import cm
+from x7.lib.annotations import tests
+from x7.testing.maketests import parse, types
+from x7.testing.support import Capture
+from tests.x7.testing.maketests.test_mod_support import cm
 
 
 class NoSubclasses(object):
@@ -23,7 +20,7 @@ class WithSubsubclass(object):
 
 @tests(parse)
 class Test0parse(TestCase):
-    """Tests for stand-alone functions in gg.devtools.maketests.parse module"""
+    """Tests for stand-alone functions in x7.testing.maketests.parse module"""
 
     @tests(parse.expand_subclasses)
     def test_expand_subclasses(self):

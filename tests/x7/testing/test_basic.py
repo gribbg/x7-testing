@@ -10,7 +10,7 @@ class BasicTestSuite(unittest.TestCase):
 
     def test_succeeds(self):
         print('__version__ is', testing.__version__)
-        print('    '+'\n    '.join(sys.path))
+        # print('    '+'\n    '.join(sys.path))
         self.assertTrue(True)
 
     def test_fails(self):
