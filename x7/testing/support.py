@@ -313,7 +313,8 @@ class RecordedDataModule(object):
         return gotten
         # return self.data.get(self._key(cls, func, case), RecordedData.NONE)
 
-    def put(self, cls, func: str, case: str, new_data):
+    def put(self, cls, func: str, case: str, new_data, patch=False):
+        """Store data and set .changed=True unless patch=True"""
         # Validate that new_data is picklable
         key = self._key(cls, func, case)
         try:
@@ -321,7 +322,8 @@ class RecordedDataModule(object):
         except Exception as err:
             raise RecorderError('%s: Cannot pickle %r\n%s' % (key, new_data, err)) from err
         self.data[key] = new_data
-        self.modified = True
+        if not patch:
+            self.modified = True
 
 
 class RecordedData(object):
@@ -358,8 +360,8 @@ class RecordedData(object):
         return cls.get_mod(klass.__module__).get(klass, func, case)
 
     @classmethod
-    def put(cls, klass, func: str, case: str, new_data):
-        return cls.get_mod(klass.__module__).put(klass, func, case, new_data)
+    def put(cls, klass, func: str, case: str, new_data, patch=False):
+        return cls.get_mod(klass.__module__).put(klass, func, case, new_data, patch)
 
 
 def warn_class(klass: type, message):

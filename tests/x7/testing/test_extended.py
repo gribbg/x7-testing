@@ -45,7 +45,7 @@ class TestExtendedMatcherImage(TestCase):
 class TestTestCaseExtended(extended.TestCaseExtended):
     PICKLERS = [PicklerExtensionImage]
     MATCHERS = [ExtendedMatcherImage]
-    SAVE_MATCH = not True
+    SAVE_MATCH = False
 
     @tests(extended.TestCaseExtended.almostEqual)
     @tests(extended.TestCaseExtended.almostEqualFloat)
@@ -69,20 +69,35 @@ class TestTestCaseExtended(extended.TestCaseExtended):
         self.assertEqual(True, self.almostEqual({3}, {3}))
         self.assertEqual("{3}~=~{3.01}: almostEqual: don't understand type: set", self.almostEqual({3}, {3.01}))
 
+    @tests(extended.TestCaseExtended.almostEqual)
+    def test_assertAlmostEqual_list_fails(self):
+        self.assertIn("don't understand type: list of dict", self.almostEqual([dict(x=0)], [dict(x=1e-9)]))
+
     @tests(extended.TestCaseExtended.assertAlmostEqual)
     def test_assertAlmostEqual(self):
-        # assertAlmostEqual(self, first: Any, second: Any, places: int = None, msg: Any = None, delta: float = None) -> None
-        pass  # TODO-impl x7.testing.extended.TestCaseExtended.assertAlmostEqual test
+        self.assertAlmostEqual(0, 0)
+        self.assertAlmostEqual(0, 1e-12)
+        self.assertAlmostEqual([0], [0])
+        self.assertAlmostEqual([0], [1e-12])
+        with self.assertRaises(AssertionError):
+            self.assertAlmostEqual(0, 1e-5)
+        with self.assertRaises(AssertionError):
+            self.assertAlmostEqual([0], [1e-5])
 
     @tests(extended.TestCaseExtended.assertAlmostMatch)
     def test_assertAlmostMatch(self):
-        # assertAlmostMatch(self, new_data, case='0', func=None, cls=None)
-        pass  # TODO-impl x7.testing.extended.TestCaseExtended.assertAlmostMatch test
+        self.match_patch(1+1e-12, '0')
+        self.assertAlmostMatch(1, '0')
+        with self.assertRaisesRegex(AssertionError, 'within 7 places'):
+            self.match_patch(1.0001, '1')
+            self.assertAlmostMatch(1, '1')
 
     @tests(extended.TestCaseExtended.assertMatch)
     def test_assertMatch(self):
-        # assertMatch(self, new_data, case='0', func=None, cls=None)
-        pass  # TODO-impl x7.testing.extended.TestCaseExtended.assertMatch test
+        self.assertMatch('abc\n'*10+'def\n'+'xyz\n'*10, '0')
+        with self.assertRaises(AssertionError):
+            self.match_patch('bogus', '1')
+            self.assertMatch('bogus1', '1')
 
     @tests(extended.TestCaseExtended.match)
     def test_match(self):

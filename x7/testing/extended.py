@@ -160,6 +160,10 @@ class TestCaseExtended(TestCase):
             self._matchers = [mc(self) for mc in self.MATCHERS]
         return self._matchers
 
+    @property
+    def matchable_types(self):
+        return tuple((tuple, ) + tuple(m.kind for m in self.matchers))
+
     def almostEqual(self, first: Any, second: Any, places: int = None, msg: Any = None, delta: float = None):
         """Return True if first ~=~ second, else an error message"""
 
@@ -188,8 +192,7 @@ class TestCaseExtended(TestCase):
             if len(first) != len(second):
                 msg += ': mismatched lengths: first=%d  second=%d' % (len(first), len(second))
                 return msg
-            # TODO-this was isinstance(first[0], (tuple, BasePoint, Vector)):
-            elif isinstance(first[0], (tuple, )):       # List of tuples
+            elif isinstance(first[0], self.matchable_types):       # List of tuples or matchable types
                 # Note: we know first is non-empty because:
                 #   1. first == second test would catch empty list/tuple
                 #   2. len(first) != len(second) would catch []==[...]
@@ -211,6 +214,9 @@ class TestCaseExtended(TestCase):
                         msg = msg_idx(idx)[:-1] + ': ' + almost
                         return msg
                 return True
+            else:
+                return msg + ": almostEqual: don't understand type: %s of %s" % (type(first).__name__, type(first[0]).__name__)
+
         return msg + ": almostEqual: don't understand type: %s" % type(first).__name__
 
     def assertAlmostEqual(self, first: Any, second: Any, places: int = None, msg: Any = None, delta: float = None) -> None:
@@ -321,12 +327,34 @@ class TestCaseExtended(TestCase):
             return matcher(new_data, old_data)
             # self.assertEqual(new_data, old_data)
 
+    def match_patch(self, test_data, case='0', func=None, cls=None):
+        """
+            'patch' some test data into recorded data, does not set changed flag.
+            Only used to test infrastructure.
+        """
+        if self.SAVE_MATCH == 'ignore':
+            raise RecorderError('call to match_patch when SAVE_MATCH==ignore')
+        if cls is None:
+            cls = type(self)
+        if func is None:
+            func = inspect.getframeinfo(inspect.currentframe().f_back).function
+        RecordedData.put(cls, func, case, test_data, True)
+
     def assertAlmostMatch(self, new_data, case='0', func=None, cls=None):
         msg = self.match(new_data, case, func, cls, lambda f, s: self.almostEqual(f, s))
         if msg is not True:
             raise self.failureException(msg)
 
     def assertMatch(self, new_data, case='0', func=None, cls=None):
-        msg = self.match(new_data, case, func, cls)
+        """.assertMatch, but include full values in error message"""
+        def assert_equals(data_new, data_old):
+            try:
+                self.assertEqual(data_new, data_old)
+            except AssertionError as err:
+                return err
+            return True
+        msg = self.match(new_data, case, func, cls, matcher=assert_equals)
+        if isinstance(msg, Exception):
+            raise msg
         if msg is not True:
             raise self.failureException(msg)
