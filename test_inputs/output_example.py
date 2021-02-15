@@ -19,6 +19,11 @@ class TestAClass(TestCase):
         # __str__(self)
         pass  # TO_DO-impl test_inputs.example.AClass.__str__ test
 
+    @tests(example.AClass.ab)
+    def test_ab(self):
+        # value = self.ab
+        pass  # TO_DO-impl test_inputs.example.AClass.ab test
+
     @tests(example.AClass.add)
     def test_add(self):
         # add(self, c)

@@ -32,6 +32,10 @@ class AClass(object):
     def add(self, c):
         return self.a + self.b + c
 
+    @property
+    def ab(self):
+        return self.a + self.b
+
     if SOMETHING:
         def other(self):
             return self == self

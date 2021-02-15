@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Type, NamedTuple
+from typing import Optional, Dict, Type, NamedTuple, Union
 import types
 
 # Type checking definitions
@@ -11,10 +11,11 @@ DictAdded = DictStrStr
 DictTested = DictStrStr
 OptParseValues = NamedTuple('OptParseValues', verbose=bool, dryrun=bool, print=bool, force=bool, output=str, debug=bool)
 Module = types.ModuleType
+ModOrStr = Union[Module, str]
 
 # Functional types
 ClassSrcInfo = NamedTuple('ClassSrcInfo', cls=Type, start=int, last=int)
-ParsedModule = NamedTuple('ParsedModule', classes=DictClasses, functions=DictCallable, module=Module, required_imports=set)
+ParsedModule = NamedTuple('ParsedModule', classes=DictClasses, functions=DictCallable, module=ModOrStr, required_imports=set)
 
 
 # Errors

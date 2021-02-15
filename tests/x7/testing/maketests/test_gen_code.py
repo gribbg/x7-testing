@@ -1,5 +1,6 @@
 import importlib
 import inspect
+import re
 from unittest import TestCase
 from x7.testing.maketests import gen_code, outmap
 from x7.testing.maketests.types import ParsedModule
@@ -110,9 +111,9 @@ ParseModule:  test_inputs.example
 Testmap:
 Tested:
 Added: test_inputs.example.AClass, test_inputs.example.AClass.AClassSubclass, test_inputs.example.AClass.AClassSubclass.nothing,
-    test_inputs.example.AClass.__init__, test_inputs.example.AClass.__str__, test_inputs.example.AClass.add, test_inputs.example.a_function,
-    test_inputs.example_imported.ClassGotImported, test_inputs.example_imported.ClassGotImported.__init__, test_inputs.example_imported.ClassGotImported.show,
-    test_inputs.example_imported.another_func_got_imported, test_inputs.example_imported.func_got_imported
+    test_inputs.example.AClass.__init__, test_inputs.example.AClass.__str__, test_inputs.example.AClass.ab, test_inputs.example.AClass.add,
+    test_inputs.example.a_function, test_inputs.example_imported.ClassGotImported, test_inputs.example_imported.ClassGotImported.__init__,
+    test_inputs.example_imported.ClassGotImported.show, test_inputs.example_imported.another_func_got_imported, test_inputs.example_imported.func_got_imported
 Items to add:
     class test_inputs.example.AClass:
     class test_inputs.example.AClass.AClassSubclass:
@@ -120,6 +121,7 @@ Items to add:
     funcs in test_inputs.example.AClass
         test_inputs.example.AClass.__init__
         test_inputs.example.AClass.__str__
+        test_inputs.example.AClass.ab
         test_inputs.example.AClass.add
     class test_inputs.example_imported.ClassGotImported:
         test_inputs.example_imported.ClassGotImported.__init__
@@ -137,10 +139,10 @@ ParseModule:  test_inputs.example
   Class: TestClassGotImported -> tests test_inputs.example_imported.ClassGotImported
   Class: TestModExample -> tests test_inputs.example
 Classes:
-  TestAClass: ClassSrcInfo(cls=<class 'test_inputs.output_example.TestAClass'>, start=9, last=25)
-  TestAClass0AClassSubclass: ClassSrcInfo(cls=<class 'test_inputs.output_example.TestAClass0AClassSubclass'>, start=27, last=33)
-  TestClassGotImported: ClassSrcInfo(cls=<class 'test_inputs.output_example.TestClassGotImported'>, start=35, last=46)
-  TestModExample: ClassSrcInfo(cls=<class 'test_inputs.output_example.TestModExample'>, start=48, last=66)
+  TestAClass: ClassSrcInfo(cls=<class 'test_inputs.output_example.TestAClass'>, start=9, last=30)
+  TestAClass0AClassSubclass: ClassSrcInfo(cls=<class 'test_inputs.output_example.TestAClass0AClassSubclass'>, start=32, last=38)
+  TestClassGotImported: ClassSrcInfo(cls=<class 'test_inputs.output_example.TestClassGotImported'>, start=40, last=51)
+  TestModExample: ClassSrcInfo(cls=<class 'test_inputs.output_example.TestModExample'>, start=53, last=71)
 Testmap:
   test_inputs.example.AClass: TestAClass
   test_inputs.example.AClass.AClassSubclass: TestAClass0AClassSubclass
@@ -148,10 +150,46 @@ Testmap:
   test_inputs.example: TestModExample
 Testmap: test_inputs.example, test_inputs.example.AClass, test_inputs.example.AClass.AClassSubclass, test_inputs.example_imported.ClassGotImported
 Tested: test_inputs.example, test_inputs.example.AClass, test_inputs.example.AClass.AClassSubclass, test_inputs.example.AClass.AClassSubclass.nothing,
-    test_inputs.example.AClass.__init__, test_inputs.example.AClass.__str__, test_inputs.example.AClass.add, test_inputs.example.a_function,
-    test_inputs.example_imported.ClassGotImported, test_inputs.example_imported.ClassGotImported.__init__, test_inputs.example_imported.ClassGotImported.show,
-    test_inputs.example_imported.another_func_got_imported, test_inputs.example_imported.func_got_imported
+    test_inputs.example.AClass.__init__, test_inputs.example.AClass.__str__, test_inputs.example.AClass.ab, test_inputs.example.AClass.add,
+    test_inputs.example.a_function, test_inputs.example_imported.ClassGotImported, test_inputs.example_imported.ClassGotImported.__init__,
+    test_inputs.example_imported.ClassGotImported.show, test_inputs.example_imported.another_func_got_imported, test_inputs.example_imported.func_got_imported
 Added:
+'''.strip('\n')
+EXPECTED_CLASS_EXTRA = '''
+@tests(test_gen_code.KlassExtra)
+class TestKlassExtra(TestCase):
+    @tests(test_gen_code.KlassExtra.class_method)
+    def test_class_method(self):
+        # class_method()
+        pass  # TODO-impl tests.x7.testing.maketests.test_gen_code.KlassExtra.class_method test
+
+    @tests(test_gen_code.KlassExtra.get_and_set)
+    def test_get_and_set(self):
+        # value = self.get_and_set
+        # self.get_and_set = value
+        pass  # TODO-impl tests.x7.testing.maketests.test_gen_code.KlassExtra.get_and_set test
+
+    @tests(test_gen_code.KlassExtra.get_and_set_and_del)
+    def test_get_and_set_and_del(self):
+        # value = self.get_and_set_and_del
+        # self.get_and_set_and_del = value
+        # del self.get_and_set_and_del
+        pass  # TODO-impl tests.x7.testing.maketests.test_gen_code.KlassExtra.get_and_set_and_del test
+
+    @tests(test_gen_code.KlassExtra.get_only)
+    def test_get_only(self):
+        # value = self.get_only
+        pass  # TODO-impl tests.x7.testing.maketests.test_gen_code.KlassExtra.get_only test
+
+    @tests(test_gen_code.KlassExtra.standard_method)
+    def test_standard_method(self):
+        # standard_method(self)
+        pass  # TODO-impl tests.x7.testing.maketests.test_gen_code.KlassExtra.standard_method test
+
+    @tests(test_gen_code.KlassExtra.static_method)
+    def test_static_method(self):
+        # static_method()
+        pass  # TODO-impl tests.x7.testing.maketests.test_gen_code.KlassExtra.static_method test
 '''.strip('\n')
 
 
@@ -189,6 +227,52 @@ class Klass(BaseKlass):
 
 class Klazz(BaseKlass):
     """Empty class for testing no member functions"""
+
+
+class KlassExtraBase:
+    @property
+    def prop_inherited(self):
+        return 1
+
+
+class KlassExtra(KlassExtraBase):
+    """Example to test class properties, static- and class- methods"""
+    value = 1
+
+    def standard_method(self):
+        return self.value
+
+    @staticmethod
+    def static_method():
+        return 4
+
+    @classmethod
+    def class_method(cls):
+        pass
+
+    @property
+    def get_only(self):
+        return self.value
+
+    @property
+    def get_and_set(self):
+        return self.value
+
+    @get_and_set.setter
+    def get_and_set(self, value):
+        self.value = value
+
+    @property
+    def get_and_set_and_del(self):
+        return self.value
+
+    @get_and_set_and_del.setter
+    def get_and_set_and_del(self, value):
+        self.value = value
+
+    @get_and_set_and_del.deleter
+    def get_and_set_and_del(self):
+        del self.value
 
 
 @tests(gen_code)
@@ -242,6 +326,31 @@ class TestModGenCode(TestCase):
             'skipping apparently inherited function: ignore_this in tests.x7.testing.maketests.test_gen_code.Klass',
         ]
         self.assertEqual('\n'.join(lines), capture.stdout())
+        self.assertEqual('', capture.stderr())
+
+    @tests(gen_code.gen_class)
+    @tests(gen_code.gen_property)
+    def test_gen_class_extra_verbose(self):
+        with Capture() as capture:
+            self.test_gen_class_extra(True)
+        lines = [
+            '.get_and_set: found property: <property object at 0x7fe7701cd5e0>',
+            '   with fget=tests.x7.testing.maketests.test_gen_code.KlassExtra.get_and_set fset=tests.x7.testing.maketests.test_gen_code.KlassExtra.get_and_set fdel=None',
+            '.get_and_set_and_del: found property: <property object at 0x7fe7701cd590>',
+            '   with fget=tests.x7.testing.maketests.test_gen_code.KlassExtra.get_and_set_and_del fset=tests.x7.testing.maketests.test_gen_code.KlassExtra.get_and_set_and_del fdel=tests.x7.testing.maketests.test_gen_code.KlassExtra.get_and_set_and_del',
+            '.get_only: found property: <property object at 0x7fe7701cd540>',
+            '   with fget=tests.x7.testing.maketests.test_gen_code.KlassExtra.get_only fset=None fdel=None',
+            '.prop_inherited: found property: <property object at 0x7fe7701cd4a0>',
+            '   with fget=tests.x7.testing.maketests.test_gen_code.KlassExtraBase.prop_inherited fset=None fdel=None',
+            'skipping apparently inherited property: prop_inherited in tests.x7.testing.maketests.test_gen_code.KlassExtra',
+            '? gen_class(tests.x7.testing.maketests.test_gen_code.KlassExtra)-what is value:1'
+        ]
+
+        stdout = capture.stdout()
+        # import pprint; pprint.pp(stdout.splitlines(), width=160)
+        lines = '\n'.join(lines)
+        hex_pat = re.compile('0x([0-9A-Fa-f]+)')
+        self.assertEqual(hex_pat.sub('0x...', lines), hex_pat.sub('0x...', stdout))
         self.assertEqual('', capture.stderr())
 
     @tests(gen_code.gen_class)
@@ -315,6 +424,32 @@ class TestModGenCode(TestCase):
         self.assertEqual(True, isnew)
         self.assertEqual(expected_class('*p').replace('Klass', 'Klazz'), text)
         self.assertEqual({'tests.x7.testing.maketests.test_gen_code.Klazz': 'class'}, added)
+        self.assertEqual({}, tested)
+
+    @tests(gen_code.gen_class)
+    @tests(gen_code.gen_property)
+    def test_gen_class_extra(self, verbose=False):
+        added = {}
+        tested = {}
+
+        debug = False
+        if debug:
+            for member, value in inspect.getmembers(KlassExtra):
+                is_set = set()
+                for is_method in [ism for ism in dir(inspect) if ism.startswith('is')]:
+                    if getattr(inspect, is_method)(value):
+                        is_set.add(is_method)
+                print('KlassExtra.%s (%s) is %s' % (member, value, ', '.join(sorted(is_set))))
+                if qualname := getattr(value, '__qualname__', None):
+                    print('   ', qualname)
+
+        text, isnew = gen_code.gen_class('KlassExtra', KlassExtra, added, tested, verbose)
+        self.assertEqual(True, isnew)
+        self.assertEqual(EXPECTED_CLASS_EXTRA, text)
+        base = 'tests.x7.testing.maketests.test_gen_code.KlassExtra'
+        keys = ',.class_method,.get_and_set,.get_and_set_and_del,.get_only,.standard_method,.static_method'.split(',')
+        expected_added = dict((base+key, base if key else 'class') for key in keys)
+        self.assertEqual(expected_added, added)
         self.assertEqual({}, tested)
 
     def test_force_coverage(self):

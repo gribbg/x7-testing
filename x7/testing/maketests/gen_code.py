@@ -60,6 +60,25 @@ def gen_func(name: str, func: callable, klass: OptClass, added: DictAdded, teste
     return '\n'.join(out)
 
 
+def gen_property(name: str, prop: property, klass: type, added: DictAdded, tested: DictTested) -> OptStr:
+    fullname = '.'.join((klass.__module__, klass.__qualname__, name))
+    tailname = mod_tail_join(klass.__module__, klass.__qualname__, name)
+    tag = item_name(klass)
+    if fullname in tested:
+        return None
+    added[fullname] = tag
+
+    out = [
+        '    @tests(%s)' % tailname,
+        '    def test_%s(self):' % name,
+        '        # value = self.%s' % name if prop.fget else None,
+        '        # self.%s = value' % name if prop.fset else None,
+        '        # del self.%s' % name if prop.fdel else None,
+        '        pass  # TODO-impl %s test' % fullname,
+    ]
+    return '\n'.join(filter(None, out))
+
+
 def gen_class(name: str, klass: type, added: DictAdded, tested: DictTested, verbose=False) -> Tuple[str, bool]:
     """
         Generate code to test member functions in <klass>
@@ -80,9 +99,9 @@ def gen_class(name: str, klass: type, added: DictAdded, tested: DictTested, verb
     baselen = len(out)
     mod = sys.modules[klass.__module__]
     for member, value in inspect.getmembers(klass):
-        if member in ('__class__', '__module__'):
+        if member in ('__class__', '__module__', '__weakref__'):
             pass
-        elif inspect.isfunction(value):
+        elif inspect.isfunction(value) or inspect.ismethod(value):
             implclass = value.__qualname__.rpartition('.')[0]
             if implclass != klass.__qualname__:
                 # Looks like an inherited function, so skip
@@ -99,6 +118,23 @@ def gen_class(name: str, klass: type, added: DictAdded, tested: DictTested, verb
             if is_local(value, mod):
                 if verbose:
                     print('found class-local class: %s, should already be handled' % item_name(value))
+        elif isinstance(value, property):
+            if verbose:
+                print('.%s: found property: %s' % (member, value))
+                func_names = tuple(item_name(f) if f else 'None' for f in (value.fget, value.fset, value.fdel))
+                print('   with fget=%s fset=%s fdel=%s' % func_names)
+            implclass = value.fget.__qualname__.rpartition('.')[0]
+            if implclass != klass.__qualname__:
+                # Looks like an inherited function, so skip
+                if verbose:
+                    print('skipping apparently inherited property: %s in %s' % (member, fullname))
+                coverage_gets_confused()
+                continue
+            func_text = gen_property(member, value, klass, added, tested)
+            if func_text:
+                if len(out) != baselen:
+                    out.append('')
+                out.append(func_text)
         else:
             if verbose and not member.startswith('__'):
                 print('? gen_class(%s)-what is %s:%s' % (fullname, member, value))
