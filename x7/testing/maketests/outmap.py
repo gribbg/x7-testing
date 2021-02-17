@@ -1,6 +1,6 @@
 import importlib
 import inspect
-import re
+import ast
 from typing import Dict, List, Tuple, Union
 
 from x7.lib import annotations
@@ -122,49 +122,21 @@ class OutputMap(object):
         for name, info in self.classes.items():
             self.lines[info.start].tag = name + ':ins'
 
-        def fix_re(pat):
-            """Transform simplified re with <name>, etc. to actual re"""
-            pat_name = r'[._a-zA-z][._a-zA-z0-9]*'
-            pat_names = r'<name>(?:,<name>)*'
-            # pat_name_as = r'<name>(?: as <name>)?'
-            # pat_names_as = r'<name_as>(?:,<name_as>)*'
-
-            fixed = pat.replace(' ', r'\s+')
-            fixed = fixed.replace('<names>', pat_names)
-            fixed = fixed.replace('<name>', pat_name)
-            fixed = fixed.replace(',', r'\s*,\s*')
-            fixed = r'^\s*' + fixed + r'\s*(?:#.*)*$'
-            return re.compile(fixed)
-
-        # Look for import statements
-        import_from = fix_re(r'from (<name>) import (<names>)')
-        # import_plain = fix_re('import (<names_as>)')
-        # import_from = fix_re('from (<name>) import (<names_as>)')
-        # re_name = fix_re(r'(<name>)(?: as (<name>))?')
-        for ln, l in enumerate(self.lines):
-            m = import_from.match(l.text())
-            if m:
-                if self.debug:      # pragma: no cover
-                    print('  IMPORT:', m)
-                mod_head = m.group(1).strip()
-                for target_mod in m.group(2).split(','):
-                    self.imports[(mod_head, target_mod.strip())] = ln
-        import ast
         lines = ''.join(l.text() for l in self.lines)
-        if self.debug:
+        if self.debug:                  # pragma: no cover
             print('OutMap: ', self.modname, self.module.__file__)
         parsed = ast.parse(lines)
-        ast_imports = {}
+        self.imports = {}
         for b in parsed.body:
             if isinstance(b, ast.Import):
                 for n in b.names:
-                    if self.debug:
+                    if self.debug:      # pragma: no cover
                         print('   Import: %s%s @ %d' % (n.name, ('as %s' % n.asname) if n.asname else '', b.lineno))
                     if not n.asname:
-                        ast_imports[mod_split(n.name)] = b.lineno-1
+                        self.imports[mod_split(n.name)] = b.lineno-1
             elif isinstance(b, ast.ImportFrom):
                 for n in b.names:
-                    if self.debug:
+                    if self.debug:      # pragma: no cover
                         print('   ImportFrom: %s -> %s%s%s @ %d' % (
                             b.module, n.name,
                             (' as %s' % n.asname) if n.asname else '',
@@ -172,11 +144,8 @@ class OutputMap(object):
                             b.lineno)
                         )
                     if not n.asname:
-                        ast_imports[(b.module, n.name)] = b.lineno-1
+                        self.imports[(b.module, n.name)] = b.lineno-1
 
         if self.debug:      # pragma: no cover
             import pprint
-            pprint.pprint({' AST_IMPORTS:': ast_imports})
             pprint.pprint({'     IMPORTS:': self.imports})
-
-        self.imports = ast_imports
