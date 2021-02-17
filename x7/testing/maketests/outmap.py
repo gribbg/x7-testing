@@ -6,6 +6,7 @@ from typing import Dict, List, Tuple, Union
 from x7.lib import annotations
 from x7.lib import inspect_more
 from x7.testing.maketests import mod_support
+from x7.testing.maketests.mod_support import mod_split
 from x7.testing.maketests.parse import parse_module
 from x7.testing.maketests.types import OptStr, DictTested, DictAdded, ClassSrcInfo, Module
 
@@ -148,6 +149,34 @@ class OutputMap(object):
                 mod_head = m.group(1).strip()
                 for target_mod in m.group(2).split(','):
                     self.imports[(mod_head, target_mod.strip())] = ln
+        import ast
+        lines = ''.join(l.text() for l in self.lines)
+        if self.debug:
+            print('OutMap: ', self.modname, self.module.__file__)
+        parsed = ast.parse(lines)
+        ast_imports = {}
+        for b in parsed.body:
+            if isinstance(b, ast.Import):
+                for n in b.names:
+                    if self.debug:
+                        print('   Import: %s%s @ %d' % (n.name, ('as %s' % n.asname) if n.asname else '', b.lineno))
+                    if not n.asname:
+                        ast_imports[mod_split(n.name)] = b.lineno-1
+            elif isinstance(b, ast.ImportFrom):
+                for n in b.names:
+                    if self.debug:
+                        print('   ImportFrom: %s -> %s%s%s @ %d' % (
+                            b.module, n.name,
+                            (' as %s' % n.asname) if n.asname else '',
+                            (' level %d' % b.level) if b.level else '',
+                            b.lineno)
+                        )
+                    if not n.asname:
+                        ast_imports[(b.module, n.name)] = b.lineno-1
+
         if self.debug:      # pragma: no cover
             import pprint
-            pprint.pprint({'   IMPORTS:': self.imports})
+            pprint.pprint({' AST_IMPORTS:': ast_imports})
+            pprint.pprint({'     IMPORTS:': self.imports})
+
+        self.imports = ast_imports

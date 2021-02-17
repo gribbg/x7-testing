@@ -1,5 +1,6 @@
 """Test input file for parse test_parse.py"""
 
+import sys
 from x7.lib import annotations
 from x7.lib.annotations import tests
 from test_inputs.example_imported import ClassGotImported, func_got_imported
@@ -19,12 +20,12 @@ def excluded_function():
     pass
 
 
-THIS_LINE_IS = 22
+THIS_LINE_IS = 23
 
 
 @tests(annotations)
 class TestModExample(object):
-    START_LINE = 25
+    START_LINE = 26
 
     @tests(tests)
     def test_tests(self):
@@ -34,12 +35,12 @@ class TestModExample(object):
     def test_example_imported(self):
         pass
 
-    END_LINE = 37
+    END_LINE = 38
 
 
 @tests(TestModExample)
 class TestModExample2(object):
-    START_LINE = 40
+    START_LINE = 41
 
     @tests(TestModExample.test_tests)
     def test1(self):
@@ -49,7 +50,7 @@ class TestModExample2(object):
     def test2(self):
         pass
 
-    END_LINE = 52
+    END_LINE = 53
 
 
 @tests(excluded_function)
@@ -57,5 +58,5 @@ def a_function(a, b):
     return a+b
 
 
-a_function.START_LINE = 55
-a_function.END_LINE = 57
+a_function.START_LINE = 56
+a_function.END_LINE = 58

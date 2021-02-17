@@ -51,6 +51,9 @@ class TestOutputMap(TestCase):
         for l in lines:
             self.assertIn(l, out)
         self.assertEqual('', capture.stderr())
+        self.assertEqual(2, om.imports[('', 'sys')])
+        self.assertEqual(3, om.imports[('x7.lib', 'annotations')])
+        self.assertEqual(5, om.imports[('test_inputs.example_imported', 'func_got_imported')])
 
     @tests(OutputMap.find_class_source)
     @tests(OutputMap.build)
