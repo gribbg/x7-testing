@@ -176,6 +176,9 @@ class TestCaseExtended(TestCase):
             return almost if almost is True else (msg + ': ' + almost)
         if type(first) != type(second):
             return msg + ': mismatched types: %s vs %s' % (type(first), type(second))
+        if isinstance(first, (str, )):
+            # print('AE(%r, %r, msg=%r) => not equal' % (first, second, msg))
+            return msg + ': not equal'
 
         def msg_idx(i):
             if msg.endswith('] '):
@@ -192,31 +195,24 @@ class TestCaseExtended(TestCase):
             if len(first) != len(second):
                 msg += ': mismatched lengths: first=%d  second=%d' % (len(first), len(second))
                 return msg
-            elif isinstance(first[0], self.matchable_types):       # List of tuples or matchable types
-                # Note: we know first is non-empty because:
-                #   1. first == second test would catch empty list/tuple
-                #   2. len(first) != len(second) would catch []==[...]
-                if not isinstance(first[0], type(second[0])):
-                    msg += ': mismatched element types: %s vs %s' % (
-                        util.strclass(type(first[0])), util.strclass(type(second[0])))
-                    return msg
-                for idx, (f, s) in enumerate(zip(first, second)):
-                    try:
-                        self.assertAlmostEqual(f, s, places=places, delta=delta, msg=msg_idx(idx))
-                    except self.failureException as err:
-                        msg = str(err)      # Use this try/except/raise to simplify traceback stack
-                        return msg
-                return True
-            elif isinstance(first[0], Number):
-                for idx, (f, s) in enumerate(zip(first, second)):
-                    almost = self.almostEqualFloat(f, s, places=places, delta=delta)
-                    if almost is not True:
-                        msg = msg_idx(idx)[:-1] + ': ' + almost
-                        return msg
-                return True
             else:
-                return msg + ": almostEqual: don't understand type: %s of %s" % (type(first).__name__, type(first[0]).__name__)
-
+                for idx, (f, s) in enumerate(zip(first, second)):
+                    if isinstance(f, (int, float)) and isinstance(s, (int, float)):
+                        almost = self.almostEqualFloat(f, s, places=places, delta=delta)
+                        if almost is not True:
+                            msg = msg_idx(idx)[:-1] + ': ' + almost
+                            return msg
+                    elif type(f) != type(s):
+                        msg += msg_idx(idx)[:-1] + ': mismatched element types: %s vs %s' % (
+                            util.strclass(type(f)), util.strclass(type(s)))
+                        return msg
+                    else:
+                        try:
+                            self.assertAlmostEqual(f, s, places=places, delta=delta, msg=msg_idx(idx))
+                        except self.failureException as err:
+                            msg = str(err)      # Use this try/except/raise to simplify traceback stack
+                            return msg
+                return True
         return msg + ": almostEqual: don't understand type: %s" % type(first).__name__
 
     def assertAlmostEqual(self, first: Any, second: Any, places: int = None, msg: Any = None, delta: float = None) -> None:

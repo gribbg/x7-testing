@@ -71,7 +71,17 @@ class TestTestCaseExtended(extended.TestCaseExtended):
 
     @tests(extended.TestCaseExtended.almostEqual)
     def test_assertAlmostEqual_list_fails(self):
-        self.assertIn("don't understand type: list of dict", self.almostEqual([dict(x=0)], [dict(x=1e-9)]))
+        self.assertIn("don't understand type: dict", self.almostEqual([dict(x=0)], [dict(x=1e-9)]))
+
+    @tests(extended.TestCaseExtended.almostEqual)
+    def test_assertAlmostEqual_tuple_of_stuff(self):
+        self.assertAlmostEqual(('thing', 'other'), ('thing', 'other'))
+        self.assertAlmostEqual(((1, 2), 'thing', 'other'), ((1, 2.000000000001), 'thing', 'other'))
+        self.assertIn('@ [1] : not equal', self.almostEqual(('thing', 'other'), ('thing', 'other1')))
+        self.assertIn('@ [0][1]: 2 != 2.1 within 7 places',
+                      self.almostEqual(((1, 2), 'thing', 'other'), ((1, 2.1), 'thing', 'other1')))
+        self.assertIn('@ [2] : not equal',
+                      self.almostEqual(((1, 2), 'thing', 'other'), ((1, 2.000000000001), 'thing', 'other1')))
 
     @tests(extended.TestCaseExtended.assertAlmostEqual)
     def test_assertAlmostEqual(self):
