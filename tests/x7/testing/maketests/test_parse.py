@@ -2,7 +2,7 @@ from unittest import TestCase
 from typing import NamedTuple
 from x7.lib.annotations import tests
 from x7.testing.maketests import parse, types
-from x7.testing.support import Capture
+from x7.lib.capture import Capture
 from tests.x7.testing.maketests.test_mod_support import cm
 
 
@@ -51,7 +51,7 @@ class Test0parse(TestCase):
         self.assertEqual({'TestModExample', 'TestModExample2', 'ClassGotImported'}, set(parsed.classes.keys()), )
         self.assertEqual({'a_function', 'func_got_imported'}, set(parsed.functions.keys()))
         self.assertEqual(capture.stderr(), '')
-        self.assertEqual('ParseModule:  test_inputs.parse_basic', capture.stdout())
+        self.assertEqual('ParseModule:  test_inputs.parse_basic', capture.stdout().strip())
 
     @tests(parse.parse_module)
     def test_parse_module_fails(self):

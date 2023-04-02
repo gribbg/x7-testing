@@ -8,54 +8,22 @@ import pickle
 import sys
 import zlib
 from base64 import b85encode, b85decode
-from io import StringIO
 from numbers import Number
-from typing import Tuple, Optional, TextIO, List, Dict, Any
+from typing import Optional, List, Dict, Any
 
 ModuleType = type(sys)
 
 __all__ = [
-    'Capture', 'Argv',
+    'Argv',
     'RecorderError', 'RecordedDataModule', 'RecordedData',
     'Pickler', 'PicklerExtension', 'PicklerExtensionImage',
     'warn_class',
 ]
 
-TupleTextIO = Optional[Tuple[TextIO, TextIO]]
-TupleStringIO = Optional[Tuple[StringIO, StringIO]]
-
 
 # noinspection PyUnusedLocal
 def unused(*args):
     pass
-
-
-class Capture(object):
-    """
-        Usage:
-            with Capture() as cap:
-                something()
-            self.assertIn('important', cap.stdout())
-    """
-
-    def __init__(self):
-        self.old: TupleTextIO = None
-        self.new: TupleStringIO = None
-
-    def __enter__(self):
-        self.old = sys.stderr, sys.stdout
-        self.new = StringIO(), StringIO()
-        sys.stderr, sys.stdout = self.new
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        sys.stderr, sys.stdout = self.old
-
-    def stderr(self):
-        return self.new[0].getvalue().strip()
-
-    def stdout(self):
-        return self.new[1].getvalue().strip()
 
 
 class Argv(object):
@@ -133,7 +101,7 @@ class PicklerExtensionImage(PicklerExtension):
 
 class Pickler(object):
     """
-        Pickler is used to generate a (mostly) human readable dump of an object.
+        Pickler is used to generate a (mostly) human-readable dump of an object.
         The output is executable Python code.
 
         Known types such as int, float, list, tuple, dict are output as repr(object).

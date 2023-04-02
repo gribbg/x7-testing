@@ -4,7 +4,7 @@ import re
 from unittest import TestCase
 from x7.testing.maketests import gen_code, outmap
 from x7.testing.maketests.types import ParsedModule
-from x7.testing.support import Capture
+from x7.lib.capture import Capture
 from x7.lib.annotations import tests
 
 EXPECTED_FUNC_PLAIN = """
@@ -325,7 +325,7 @@ class TestModGenCode(TestCase):
             'found class-local class: tests.x7.testing.maketests.test_gen_code.Klass.IgnoreThisToo, should already be handled',
             'skipping apparently inherited function: ignore_this in tests.x7.testing.maketests.test_gen_code.Klass',
         ]
-        self.assertEqual('\n'.join(lines), capture.stdout())
+        self.assertEqual('\n'.join(lines), capture.stdout().strip())
         self.assertEqual('', capture.stderr())
 
     @tests(gen_code.gen_class)
@@ -346,7 +346,7 @@ class TestModGenCode(TestCase):
             '? gen_class(tests.x7.testing.maketests.test_gen_code.KlassExtra)-what is value:1'
         ]
 
-        stdout = capture.stdout()
+        stdout = capture.stdout().strip()
         # import pprint; pprint.pp(stdout.splitlines(), width=160)
         lines = '\n'.join(lines)
         hex_pat = re.compile('0x([0-9A-Fa-f]+)')
@@ -499,7 +499,7 @@ class TestFuncGenModule(TestCase):
         self.assertCodeEqual(expected, text)
         self.assertNotIn('error', text.lower())
         if stdout:
-            self.assertEqual(stdout, capture.stdout())
+            self.assertEqual(stdout, capture.stdout().strip())
         else:
             self.assertNotIn('error', capture.stdout().lower())
         self.assertEqual('', capture.stderr())
@@ -510,7 +510,7 @@ class TestFuncGenModule(TestCase):
         with Capture() as capture:
             text = gen_code.gen_module(testmod, 'tests.test_output_module', '# HEADER')
         self.assertEqual(EXPECTED_PARSE_EMPTY, text)
-        self.assertEqual(EXPECTED_PARSE_EMPTY_STDOUT, capture.stdout())
+        self.assertEqual(EXPECTED_PARSE_EMPTY_STDOUT, capture.stdout().strip())
         self.assertEqual('', capture.stderr())
 
     @tests(gen_code.gen_module)
@@ -520,7 +520,7 @@ class TestFuncGenModule(TestCase):
             text = gen_code.gen_module(testmod, 'tests.test_output_module', '# HEADER',
                                        verbose=True, dryrun=True, doprint=True)
         self.assertEqual(EXPECTED_PARSE_EMPTY, text)
-        self.assertEqual(EXPECTED_PARSE_EMPTY_DRYRUN_STDOUT, capture.stdout())
+        self.assertEqual(EXPECTED_PARSE_EMPTY_DRYRUN_STDOUT, capture.stdout().strip())
         self.assertEqual('', capture.stderr())
 
     @tests(gen_code.gen_module)

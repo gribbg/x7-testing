@@ -2,7 +2,7 @@ from unittest import TestCase
 from x7.lib.annotations import tests
 from x7.testing.maketests.outmap import OutputMapElem, OutputMap
 from test_inputs import parse_basic
-from x7.testing.support import Capture
+from x7.lib.capture import Capture
 from x7.lib import annotations
 from tests.x7.testing.maketests.test_mod_support import cm
 

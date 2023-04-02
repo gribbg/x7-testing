@@ -1,7 +1,8 @@
 from unittest import TestCase
 
-from x7.testing.support import Argv, Capture
+from x7.lib.capture import Capture
 from x7.lib.annotations import tests
+from x7.testing.support import Argv
 from x7.testing.maketests import maketests
 
 

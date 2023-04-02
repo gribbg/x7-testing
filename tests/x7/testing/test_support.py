@@ -2,25 +2,10 @@ import sys
 from io import StringIO
 from unittest import TestCase
 from x7.lib.annotations import tests
-from x7.testing.support import Capture, Argv, Pickler, PicklerExtensionImage, PicklerExtension
+from x7.testing.support import Argv, Pickler, PicklerExtensionImage, PicklerExtension
 from x7.testing import support
 # noinspection PyPackageRequirements
 from PIL import Image
-
-
-@tests(Capture)
-class TestCapture(TestCase):
-    @tests(Capture.__enter__)
-    @tests(Capture.__exit__)
-    @tests(Capture.__init__)
-    @tests(Capture.stderr)
-    @tests(Capture.stdout)
-    def test_capture(self):
-        with Capture() as cm:
-            print('StdOut', file=sys.stdout)
-            print('StdErr', file=sys.stderr)
-        self.assertIn('StdOut', cm.stdout())
-        self.assertIn('StdErr', cm.stderr())
 
 
 @tests(Argv)
