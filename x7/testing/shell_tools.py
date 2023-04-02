@@ -1,7 +1,9 @@
 """
     Shell tools for x7.testing
 
-    Usage: from x7.shell import *
+    Usage::
+
+        >> from x7.shell import *
 """
 
 __all__ = ['maketests']

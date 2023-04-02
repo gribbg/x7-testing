@@ -1,2 +1,2 @@
 pillow
-x7-lib
+x7-lib>=0.6.1

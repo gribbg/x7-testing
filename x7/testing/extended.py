@@ -5,7 +5,6 @@ from __future__ import annotations
 import inspect
 from itertools import islice
 
-from numbers import Number
 from typing import Any, Union, Callable, Optional, Tuple, Type, List
 
 from unittest import util
