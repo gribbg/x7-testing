@@ -28,10 +28,12 @@ def unused(*args):
 
 class Argv(object):
     """
-        Provide context around changing sys.argv.
+        Provide context around changing :code:`sys.argv` for testing.
+        Reset :code:`sys.argv` when exiting context.
 
-        Usage:
-            with CaptureArgv(['prog', '-whatever', 'you', 'need']):
+        Usage::
+
+            with Argv(['prog', '-whatever', 'you', 'need']):
                 something()
     """
 
